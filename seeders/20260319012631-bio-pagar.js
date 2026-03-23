@@ -17,6 +17,7 @@ module.exports = {
         role: 'ADMIN', 
         username: 'admin_malang', 
         password: hashedPassword,
+        account_status: 'APPROVED',
         createdAt: new Date(), 
         updatedAt: new Date() 
       },
@@ -26,6 +27,8 @@ module.exports = {
         username: 'sdn_kauman1', 
         password: hashedPassword, 
         registration_code: 'SCH-KMN-001',
+        bgn_code: null,
+        account_status: 'APPROVED',
         createdAt: new Date(), 
         updatedAt: new Date() 
       },
@@ -34,7 +37,9 @@ module.exports = {
         role: 'SPPG', 
         username: 'sppg_malang', 
         password: hashedPassword, 
+        registration_code: null, 
         bgn_code: 'BGN-001',
+        account_status: 'APPROVED',
         createdAt: new Date(), 
         updatedAt: new Date() 
       },
@@ -43,6 +48,7 @@ module.exports = {
         role: 'PUBLIC', 
         username: 'warga_malang', 
         password: hashedPassword,
+        account_status: 'APPROVED',
         createdAt: new Date(), 
         updatedAt: new Date() 
       }
@@ -71,7 +77,7 @@ module.exports = {
       id_sppg: 1,
       date_report: '2026-03-19',
       menu_name: 'Nasi Pecel Malang',
-      meal_time: 'LUNCH',
+      meal_time: '12.30',
       total_portion: 100,
       energy: 450,
       protein: 15,
