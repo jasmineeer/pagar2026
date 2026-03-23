@@ -60,6 +60,11 @@ module.exports = (sequelize, DataTypes) => {
         min: 1, 
         max: 5 
       }
+    },
+    status_review: {
+      type: DataTypes.ENUM('MENUNGGU', 'INVESTIGASI', 'SELESAI'),
+      allowNull: false,
+      defaultValue: 'MENUNGGU'
     }
   }, {
     sequelize,

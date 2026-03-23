@@ -28,6 +28,11 @@ module.exports = {
       bgn_code: {
         type: Sequelize.STRING
       },
+      account_status: {
+        type: Sequelize.ENUM('PENDING', 'APPROVED', 'REJECTED'),
+        allowNull: false,
+        defaultValue: 'APPROVED'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

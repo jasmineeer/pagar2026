@@ -47,7 +47,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     registration_code: DataTypes.STRING,
-    bgn_code: DataTypes.STRING
+    bgn_code: DataTypes.STRING,
+    account_status: {
+      type: DataTypes.ENUM('PENDING', 'APPROVED', 'REJECTED'),
+      allowNull: false,
+      defaultValue: 'APPROVED'
+    },
   }, {
     sequelize,
     modelName: 'User',
