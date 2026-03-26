@@ -68,6 +68,9 @@ module.exports = {
       id_user: userIdSppg,
       sppg_name: 'SPPG Sehat Malang',
       sppg_address: 'Jl. Lowokwaru No. 5, Malang',
+      latitude: '-7.946713',
+      longitude: '112.615668',
+      monthly_budget: 15000000,
       createdAt: new Date(),
       updatedAt: new Date()
     }]);
