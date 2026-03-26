@@ -53,6 +53,16 @@ const authMiddleware = {
             });
         }
         next();
+    },
+
+    isPublic(req, res, next) {
+        if (!req.user || req.user.role !== 'PUBLIC') {
+            return res.status(403).json({ 
+                status: 'error', 
+                message: 'Access denied. Requires PUBLIC role.' 
+            });
+        }
+        next();
     }
 };
 
