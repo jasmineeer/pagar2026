@@ -39,7 +39,7 @@ const sppgController = {
     async updateProfile(req, res) {
         try {
             const id_user = req.user.id_user;
-            const { sppg_name, sppg_address, latitude, longitude, monthly_budget } = req.body;
+            const { sppg_name, sppg_address, latitude, longitude } = req.body;
 
             const sppgProfile = await Sppg.findOne({ 
                 where: { 
@@ -55,8 +55,7 @@ const sppgController = {
                 sppg_name: sppg_name || sppgProfile.sppg_name,
                 sppg_address: sppg_address || sppgProfile.sppg_address,
                 latitude,
-                longitude,
-                monthly_budget: monthly_budget !== undefined ? monthly_budget : sppgProfile.monthly_budget
+                longitude
             });
 
             return res.status(200).json({ 
@@ -440,6 +439,48 @@ const sppgController = {
             console.error('Error createDailyReport:', error);
             return res.status(500).json({ 
                 status: 'error', 
+                message: 'Internal server error' 
+            });
+        }
+    },
+
+    async updateMonthlyBudget(req, res) {
+        try {
+            const id_user = req.user.id_user;
+            const { monthly_budget } = req.body; 
+
+            if (monthly_budget === undefined || monthly_budget === null) {
+                return res.status(400).json({ 
+                    status: 'error',
+                    message: 'Monthly budget is required' 
+                });
+            }
+
+            const sppg = await Sppg.findOne({ 
+                where: { 
+                    id_user 
+                } 
+            });
+            if (!sppg) {
+                return res.status(404).json({ 
+                    message: 'Data SPPG not found' 
+                });
+            }
+
+            await sppg.update({ monthly_budget });
+
+            return res.status(200).json({
+                status: 'success',
+                message: 'Monthly budget inserted successfully',
+                data: {
+                    sppg_name: sppg.sppg_name,
+                    monthly_budget: sppg.monthly_budget
+                }
+            });
+
+        } catch (error) {
+            console.error('Error updateMonthlyBudget:', error);
+            return res.status(500).json({ 
                 message: 'Internal server error' 
             });
         }

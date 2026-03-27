@@ -46,4 +46,10 @@ router.get('/daily_report/:id_report',
     sppgController.getDailyReportById
 );
 
+router.patch('/monthly_budget', 
+    verifyToken, 
+    isSppg, 
+    sppgController.updateMonthlyBudget
+);
+
 module.exports = router;
