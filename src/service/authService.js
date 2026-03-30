@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const authRepository = require('../repositories/auth.repository');
+const authRepository = require('../repositories/authRepository');
 const HttpError = require('../utils/HttpError');
 const { generateToken } = require('../utils/jwt');
 const { sequelize } = require('../models');
