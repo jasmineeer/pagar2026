@@ -30,7 +30,7 @@ app.use('/pagar/v1/sppg', sppgRoutes);
 app.use('/pagar/v1/school', schoolRoutes);
 app.use('/pagar/v1/public', publicRoutes);
 
-app.all('*', (req, res, next) => {
+app.use((req, res, next) => {
     next(new HttpError(404, `Can't find ${req.originalUrl} on this server!`));
 });
 
