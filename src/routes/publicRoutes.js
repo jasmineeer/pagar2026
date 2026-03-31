@@ -1,32 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const publicController = require('../controllers/publicController'); 
-const { verifyToken, isPublic } = require('../middlewares/authMiddleware');
+const publicController = require('../controllers/publicController');
+const publicValidator = require('../validators/publicValidator');
+const validate = require('../middlewares/validate');
 const upload = require('../middlewares/uploadMiddleware');
+const { verifyToken, isPublic } = require('../middlewares/authMiddleware');
 
-router.get('/sppg_list', 
+router.use(
     verifyToken, 
-    isPublic, 
-    publicController.getSppgList
+    isPublic
 );
 
-router.post('/review', 
-    verifyToken, 
-    isPublic, 
-    upload.array('attachments', 2), 
+router.get('/sppg_list', publicController.getSppgList);
+router.post('/reviews', 
+    upload.array('attachments', 2),
+    publicValidator.createReview, 
+    validate, 
     publicController.createReview
 );
 
-router.get('/dashboard/reviews', 
-    verifyToken, 
-    isPublic, 
-    publicController.getDashboardReviews
-);
-
-router.get('/dashboard/sppg_reports', 
-    verifyToken, 
-    isPublic, 
-    publicController.getDashboardSppgReports
-);
+router.get('/dashboard/reviews', publicController.getDashboardReviews);
+router.get('/dashboard/sppg_reports', publicController.getDashboardSppgReports);
 
 module.exports = router;
