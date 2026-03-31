@@ -1,54 +1,59 @@
 const express = require('express');
 const router = express.Router();
 const sppgController = require('../controllers/sppgController');
+const sppgValidator = require('../validators/sppgValidator');
 const { verifyToken, isSppg } = require('../middlewares/authMiddleware');
+const validate = require('../middlewares/validate');
 const upload = require('../middlewares/uploadMiddleware');
 
+router.use(verifyToken, isSppg);
+
 router.get('/profile', 
-    verifyToken, 
-    isSppg, 
     sppgController.getProfile
 );
 
-router.put('/profile', 
-    verifyToken, 
-    isSppg, 
-    sppgController.updateProfile
-);
-
 router.get('/dashboard', 
-    verifyToken, 
-    isSppg, 
     sppgController.getDashboardData
 );
 
-router.get('/daily_report', 
-    verifyToken, 
-    isSppg, 
+router.put('/profile', 
+    sppgController.updateProfile
+);
+
+router.get('/daily_reports', 
+    sppgValidator.paginationOnly, 
+    validate, 
     sppgController.getDailyReports
 );
 
-router.post('/daily_report', 
-    verifyToken, 
-    isSppg, 
-    upload.array('attachments', 2), 
-    sppgController.createDailyReport);
-
-router.get('/daily_report/periodic', 
-    verifyToken, 
-    isSppg, 
+router.get('/periodic_reports', 
+    sppgValidator.getPeriodic, 
+    validate, 
     sppgController.getPeriodicReports
 );
 
-router.get('/daily_report/:id_report', 
-    verifyToken, 
-    isSppg, 
+router.get('/reports/export',
+    sppgValidator.getPeriodic,
+    validate,
+    sppgController.downloadReport
+)
+
+router.post('/daily_report', 
+    upload.array('attachments', 2),
+    sppgValidator.createDailyReport, 
+    validate, 
+    sppgController.createDailyReport
+);
+
+router.get('/daily_report/:id_daily_report', 
+    sppgValidator.checkUUID,
+    validate, 
     sppgController.getDailyReportById
 );
 
-router.patch('/monthly_budget', 
-    verifyToken, 
-    isSppg, 
+router.patch('/monthly-budget', 
+    sppgValidator.updateBudget, 
+    validate, 
     sppgController.updateMonthlyBudget
 );
 
