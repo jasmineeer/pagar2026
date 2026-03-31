@@ -1,49 +1,47 @@
 const express = require('express');
 const router = express.Router();
-const schoolController = require('../controllers/schoolController'); 
-const { verifyToken, isSchool } = require('../middlewares/authMiddleware');
-const upload = require('../middlewares/uploadMiddleware'); // Sesuaikan path jika berbeda
+const schoolController = require('../controllers/school.controller');
+const schoolValidator = require('../validators/school.validator');
+const { verifyToken, isSchool } = require('../middlewares/auth.middleware');
+const validate = require('../middlewares/validate.middleware');
+const upload = require('../middlewares/upload.middleware');
 
-router.get('/profile', 
-    verifyToken, 
-    isSchool, 
-    schoolController.getProfile
-);
-
+router.use(verifyToken, isSchool);
+router.get('/profile', schoolController.getProfile);
 router.put('/profile', 
-    verifyToken, 
-    isSchool, 
+    schoolValidator.updateProfile, 
+    validate, 
     schoolController.updateProfile
 );
 
 router.get('/sppg_list', 
-    verifyToken, 
-    isSchool, 
+    schoolValidator.checkPagination, 
+    validate, 
     schoolController.getSppgList
 );
 
 router.get('/daily_report', 
-    verifyToken, 
-    isSchool, 
+    schoolValidator.checkPagination, 
+    validate, 
     schoolController.getDailyReports
 );
 
 router.post('/review', 
-    verifyToken, 
-    isSchool, 
     upload.array('attachments', 2),
+    schoolValidator.createReview, 
+    validate, 
     schoolController.createReview
 );
 
 router.get('/dashboard/reviews', 
-    verifyToken, 
-    isSchool, 
+    schoolValidator.checkPagination, 
+    validate, 
     schoolController.getDashboardReviews
 );
 
 router.get('/dashboard/sppg_reports', 
-    verifyToken, 
-    isSchool, 
+    schoolValidator.checkPagination, 
+    validate, 
     schoolController.getDashboardSppgReports
 );
 
