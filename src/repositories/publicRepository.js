@@ -1,4 +1,5 @@
 const { School, DailyReport, Sppg, Review, Attachment, User } = require('../models');
+const { Op } = Sequelize;
 
 class PublicRepository {
     async getProfile(id_user) {
@@ -45,20 +46,25 @@ class PublicRepository {
         return newReview;
     }
 
-    async findDashboardReviews() {
-        return await Review.findAll({
+async findDashboardReviews(limit, offset, keyword = '') {
+        const searchCondition = keyword ? {
+            [Op.or]: [
+                { menu_name: { [Op.like]: `%${keyword}%` } },
+                { '$sppg.sppg_name$': { [Op.like]: `%${keyword}%` } }
+            ]
+        } : {};
+
+        return await Review.findAndCountAll({
+            where: searchCondition,
             order: [['createdAt', 'DESC']],
-            limit: 15,
+            limit,
+            offset,
+            subQuery: false,
             include: [
                 {
                     model: School,
                     as: 'school',
                     attributes: ['school_name']
-                },
-                {
-                    model: Sppg,
-                    as: 'sppg',
-                    attributes: ['sppg_name']
                 },
                 {
                     model: Attachment,
@@ -69,22 +75,36 @@ class PublicRepository {
                 },
                 {
                     model: User,
-                    as: 'user', 
+                    as: "user",
                     attributes: ['username', 'role']
                 }
-            ]
+            ],
+            distinct: true
         });
     }
 
-    async findDashboardSppgReports() {
-        return await DailyReport.findAll({
+    async findDashboardSppgReports(limit, offset, keyword = '') {
+        const searchCondition = keyword ? {
+            [Op.or]: [
+                { menu_name: { [Op.like]: `%${keyword}%` } },
+                { '$sppg.sppg_name$': { [Op.like]: `%${keyword}%` } }
+            ]
+        } : {};
+
+        return await DailyReport.findAndCountAll({
+            where: searchCondition,
             order: [['createdAt', 'DESC']],
-            limit: 15,
+            limit,
+            offset,
+            subQuery: false,
             include: [
                 {
                     model: Sppg,
                     as: 'sppg',
-                    attributes: ['sppg_name', 'sppg_address']
+                    attributes: [
+                        'sppg_name', 
+                        'sppg_address'
+                    ]
                 },
                 {
                     model: Attachment,
@@ -93,7 +113,8 @@ class PublicRepository {
                     required: false,
                     attributes: ['file_url']
                 }
-            ]
+            ],
+            distinct: true
         });
     }
 

@@ -1,5 +1,12 @@
 const publicService = require('../service/publicService');
 
+const getPaginationParams = (query, defaultLimit = 10) => {
+    const page = parseInt(query.page, 10) || 1;
+    const limit = parseInt(query.limit, 10) || defaultLimit;
+    const keyword = query.search || ''; 
+    return { page, limit, keyword };
+};
+
 class PublicController {
     async getProfile(req, res, next) {
         try {
@@ -63,11 +70,13 @@ class PublicController {
 
     async getDashboardReviews(req, res) {
         try {
-            const formattedLaporan = await publicService.getDashboardReviews();
+            const { page, limit, keyword } = getPaginationParams(req.query, 15);
+            const result = await publicService.getDashboardReviews(page, limit, keyword);
             
             return res.status(200).json({
                 status: 'success',
-                data: formattedLaporan
+                data: result.data || result, 
+                meta: result.meta
             });
         } catch (error) {
             console.error('Error getDashboardReviews (Public):', error);
@@ -80,11 +89,13 @@ class PublicController {
 
     async getDashboardSppgReports(req, res) {
         try {
-            const laporanSppg = await publicService.getDashboardSppgReports();
+            const { page, limit, keyword } = getPaginationParams(req.query, 15);
+            const result = await publicService.getDashboardSppgReports(page, limit, keyword);
             
             return res.status(200).json({
                 status: 'success',
-                data: laporanSppg
+                data: result.data || result,
+                meta: result.meta
             });
         } catch (error) {
             console.error('Error getDashboardSppgReports:', error);

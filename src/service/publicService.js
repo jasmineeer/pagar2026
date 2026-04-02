@@ -2,6 +2,15 @@ const publicRepository = require('../repositories/publicRepository');
 const { sequelize } = require('../models');
 
 class PublicService {
+    _buildPaginationMeta(count, page, limit) {
+        return {
+            totalItems: count,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+            limit: limit
+        };
+    }
+
     async getProfile(id_user) {
         const profile = await publicRepository.getProfile(id_user);
 
@@ -42,43 +51,59 @@ class PublicService {
         }
     }
 
-    async getDashboardReviews() {
-        const publicReviews = await publicRepository.findDashboardReviews();
+    async getDashboardReviews(page, limit, keyword = '') {
+        const offset = (page - 1) * limit;
+        const { count, rows } = await publicRepository.findDashboardReviews(limit, offset, keyword);
 
-        return publicReviews.map(review => {
+        const formattedLaporan = rows.map(review => {
             const reviewData = review.toJSON();
             
             const userRole = reviewData.user ? reviewData.user.role : 'PUBLIC';
             const userName = reviewData.user ? reviewData.user.username : 'Anonim';
-            
-            const schoolName = reviewData.school ? reviewData.school.school_name : null;
-            const sppgName = reviewData.sppg ? reviewData.sppg.sppg_name : null;
-            
-            const locationDisplay = schoolName || sppgName || 'Location is unknown';
+            const schoolName = reviewData.school ? reviewData.school.school_name : 'School is unknown';
 
             let authorName = '';
             let displayAuthor = '';
 
             if (userRole === 'SCHOOL') {
                 authorName = userName;
-                displayAuthor = `${locationDisplay}`;
+                displayAuthor = `${schoolName}`;
             } else {
                 authorName = 'Anonim';
-                displayAuthor = `Anonim - ${locationDisplay}`;
+                displayAuthor = `Anonim - ${schoolName}`;
             }
 
             return {
                 ...reviewData,
                 author_name: authorName,
                 display_author: displayAuthor,
-                location_name: locationDisplay,
+                school_name: schoolName,
                 user: undefined 
             };
         });
+
+        return {
+            data: formattedLaporan,
+            meta: this._buildPaginationMeta(
+                count, 
+                page, 
+                limit
+            )
+        };
     }
 
-    async getDashboardSppgReports() {
-        return await publicRepository.findDashboardSppgReports();
+    async getDashboardSppgReports(page, limit, keyword = '') {
+        const offset = (page - 1) * limit;
+        const { count, rows } = await publicRepository.findDashboardSppgReports(limit, offset, keyword);
+        
+        return {
+            data: rows,
+            meta: this._buildPaginationMeta(
+                count, 
+                page, 
+                limit
+            )
+        };
     }
 
     async getDetailSppgReport(id_daily_report) {
