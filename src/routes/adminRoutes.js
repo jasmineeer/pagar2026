@@ -10,6 +10,10 @@ router.use(
     isAdmin
 );
 
+router.get('/profile', 
+    adminController.getProfile
+);
+
 router.get('/accounts/pending', 
     adminController.getPendingAccounts
 );

@@ -2,6 +2,21 @@ const { User, School, Sppg, DailyReport, Review, sequelize } = require('../model
 const { Op } = require('sequelize');
 
 const adminRepository = {
+    async getProfile(id_user) {
+        return await User.findOne({
+            where: { 
+                id_user: id_user,
+                role: 'ADMIN'
+            },
+            attributes: [
+                'name',
+                'username', 
+                'email', 
+                'role',
+            ]
+        });
+    },
+
     async getUsersByStatusAndRole(status, roles, limit, offset) {
         return await User.findAndCountAll({
             where: { 

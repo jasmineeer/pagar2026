@@ -1,6 +1,7 @@
 const adminRepository = require('../repositories/adminRepository');
 const HttpError = require('../utils/HttpError');
 const bcrypt = require('bcrypt');
+const { sendApprovalEmail } = require('../utils/email');
 
 const adminService = {
     _formatPagination(result, page, limit) {
@@ -10,6 +11,36 @@ const adminService = {
             currentPage: page,
             data: result.rows
         };
+    },
+
+    async getProfile(id_user) {
+        const profile = await adminRepository.getProfile(id_user);
+
+        if (!profile) {
+            throw new Error('NOT_FOUND');
+        }
+
+        return profile;
+    },
+
+    async approveAccount(id_user, adminEmail) {
+        const user = await userRepository.updateAccountStatus(id_user, 'approved');
+
+        if (!user) {
+            throw new Error('NOT_FOUND');
+        }
+
+        try {
+            await sendApprovalEmail(
+                user.email, 
+                user.name, 
+                adminEmail
+            );
+        } catch (error) {
+            console.error('Gagal mengirim email approval:', error.message);
+        }
+
+        return user;
     },
 
     async getPendingAccounts(page = 1, limit = 10) {
