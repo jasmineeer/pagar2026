@@ -12,6 +12,7 @@
     "multer": "^2.1.1",
     "multer-storage-cloudinary": "^4.0.0",
     "mysql2": "^3.20.0",
+    "nodemailer": "^8.0.4",
     "pdfkit-table": "^0.1.99",
     "sequelize": "^6.37.8",
     "uuid": "^13.0.0"
