@@ -83,7 +83,7 @@ const authController = {
         const user = await userRepository.findByEmail(email);
     
         if (!user) return res.status(404).json({ 
-            message: "Email tidak terdaftar" 
+            message: "Email not registed." 
         });
 
         const token = crypto.randomBytes(20).toString('hex');
@@ -93,16 +93,16 @@ const authController = {
 
         const resetUrl = `${process.env.BASE_URL_FRONTEND}/reset-password/${token}`;
         const html = `
-            <h3>Permintaan Reset Password</h3>
-            <p>Anda menerima email ini karena Anda meminta reset password.</p>
-            <p>Silakan klik link di bawah ini (berlaku selama 1 jam):</p>
+            <h3>Password Reset Request</h3>
+            <p>You are receiving this email because you requested a password reset.</p>
+            <p>Please click the link below (valid for 1 hours):</p>
             <a href="${resetUrl}">${resetUrl}</a>
     `;
 
-        await sendEmail(user.email, 'Instruksi Reset Password', html);
+        await sendEmail(user.email, 'Reset Password Instruction', html);
         res.json({ 
             status: "success", 
-            message: "Link reset password telah dikirim ke email" 
+            message: "Password reset link has been sent to your email." 
         });
     },
 
@@ -114,7 +114,7 @@ const authController = {
 
         if (!user || user.reset_password_expires < new Date()) {
             return res.status(400).json({ 
-                message: "Token tidak valid atau sudah kadaluarsa" 
+                message: "Token unvalid or expired." 
             });
         }
 
@@ -123,7 +123,7 @@ const authController = {
 
         res.json({ 
             status: "success", 
-            message: "Password berhasil diperbarui" 
+            message: "Password updated successfully." 
         });
     }
 };

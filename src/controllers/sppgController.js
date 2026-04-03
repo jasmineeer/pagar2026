@@ -14,7 +14,7 @@ const sppgController = {
             if (!id_sppg) {
                 return res.status(403).json({
                     status: 'error',
-                    message: 'Akses ditolak. ID SPPG tidak ditemukan.'
+                    message: 'Access denied. ID SPPG not found.'
                 });
             }
 
@@ -49,7 +49,7 @@ const sppgController = {
             const updated = await sppgService.updateProfile(req.user.id_user, req.body);
             return res.status(200).json({ 
                 status: 'success', 
-                message: 'Profile updated', 
+                message: 'Profile successfully updated', 
                 data: updated 
             });
         } catch (error) {

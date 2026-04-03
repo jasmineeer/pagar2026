@@ -4,7 +4,7 @@ const getPaginationParams = (query, defaultLimit = 10) => {
     const page = parseInt(query.page, 10) || 1;
     const limit = parseInt(query.limit, 10) || defaultLimit;
     const keyword = query.search || '';
-    return { page, limit };
+    return { page, limit, keyword };
 };
 
 class SchoolController {
