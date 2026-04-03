@@ -1,4 +1,4 @@
-const { body, query } = require('express-validator');
+const { body, query, param } = require('express-validator');
 
 const schoolValidator = {
     checkPagination: [
@@ -37,7 +37,13 @@ const schoolValidator = {
         body('rating_score')
             .notEmpty().withMessage('Rating tidak boleh kosong')
             .isInt({ min: 1, max: 5 }).withMessage('Rating harus berupa angka 1 sampai 5')
-    ]
+    ],
+
+    getDetailReport: [
+        param('id_daily_report')
+            .notEmpty().withMessage('ID Laporan tidak boleh kosong')
+            .isUUID().withMessage('Format ID Laporan tidak valid')
+    ],
 };
 
 module.exports = schoolValidator;

@@ -147,6 +147,32 @@ class SchoolController {
             });
         }
     }
+
+    async getDetailSppgReport(req, res) {
+        try {
+            const { id_daily_report } = req.params; 
+                
+            const detailReport = await schoolService.getDetailSppgReport(id_daily_report);
+                
+            return res.status(200).json({
+                status: 'success',
+                data: detailReport
+            });
+        } catch (error) {
+            console.error('Error getDetailSppgReport:', error);
+                
+            if (error.message === 'Laporan SPPG not found') {
+                return res.status(404).json({ 
+                    message: error.message 
+                });
+            }
+                
+            return res.status(500).json({
+                message: 'Internal server error',
+                error: error.message
+            });
+        }
+    }
 }
 
 module.exports = new SchoolController();

@@ -45,4 +45,10 @@ router.get('/dashboard/sppg_reports',
     schoolController.getDashboardSppgReports
 );
 
+router.get('/dashboard/sppg_reports/:id_daily_report', 
+    schoolValidator.getDetailReport, 
+    validate, 
+    schoolController.getDetailSppgReport
+);
+
 module.exports = router;

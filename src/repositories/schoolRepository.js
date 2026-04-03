@@ -1,5 +1,5 @@
 const { School, DailyReport, Sppg, Review, Attachment, User } = require('../models');
-const { Op } = Sequelize;
+const { Op } = require('sequelize');
 
 class SchoolRepository {
     async findAndCountAllSppg(limit, offset) {
@@ -133,6 +133,28 @@ class SchoolRepository {
                 }
             ],
             distinct: true
+        });
+    }
+
+    async findDailyReportById(id_daily_report) {
+        return await DailyReport.findByPk(id_daily_report, {
+            include: [
+                {
+                    model: Sppg,
+                    as: 'sppg',
+                    attributes: [
+                        'sppg_name', 
+                        'sppg_address'
+                    ]
+                },
+                {
+                    model: Attachment,
+                    as: 'attachments',
+                    where: { entity_type: 'DAILY_REPORT' },
+                    required: false,
+                    attributes: ['file_url', 'file_type']
+                }
+            ]
         });
     }
 }
