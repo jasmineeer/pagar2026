@@ -1,5 +1,11 @@
 const adminService = require('../service/adminService');
 
+const getPaginationParams = (query, defaultLimit = 10) => {
+    const page = parseInt(query.page, 10) || 1;
+    const limit = parseInt(query.limit, 10) || defaultLimit;
+    return { page, limit };
+};
+
 const adminController = {
     async approveAccount(req, res, next) {
         try {
@@ -13,12 +19,6 @@ const adminController = {
                 data: result
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') {
-                return res.status(404).json({
-                    status: 'error',
-                    message: 'User not found'
-                });
-            }
             next(error);
         }
     },
@@ -32,20 +32,13 @@ const adminController = {
                 data: profile 
             });
         } catch (error) {
-            if (error.message === 'NOT_FOUND') {
-                return res.status(404).json({ 
-                    status: 'error', 
-                    message: 'Admin Profile not found' 
-                });
-            }
             next(error);
         }
     },
 
     async getPendingAccounts(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const { page, limit } = getPaginationParams(req.query, 10);
             const result = await adminService.getPendingAccounts(page, limit);
             
             return res.status(200).json({ 
@@ -59,8 +52,7 @@ const adminController = {
 
     async getActiveAccounts(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const { page, limit } = getPaginationParams(req.query, 10);
             const result = await adminService.getActiveAccounts(page, limit);
             
             return res.status(200).json({ 
@@ -74,8 +66,7 @@ const adminController = {
 
     async getAllSppg(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const { page, limit } = getPaginationParams(req.query, 10);
             const result = await adminService.getAllSppg(page, limit);
             
             return res.status(200).json({ 
@@ -89,8 +80,7 @@ const adminController = {
 
     async getAllSchool(req, res, next) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
+            const { page, limit } = getPaginationParams(req.query, 10);
             const result = await adminService.getAllSchool(page, limit);
             
             return res.status(200).json({ 
@@ -156,6 +146,21 @@ const adminController = {
                 status: 'success',
                 message: 'Review status updated successfully.',
                 data
+            });
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    async getDashboardReviews(req, res) {
+        try {
+            const { page, limit } = getPaginationParams(req.query, 10);
+            const result = await adminService.getDashboardReviews(page, limit);
+                
+            return res.status(200).json({
+                status: 'success',
+                data: result.data,
+                meta: result.meta
             });
         } catch (error) {
             next(error);

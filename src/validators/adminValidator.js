@@ -1,6 +1,15 @@
 const { body, param } = require('express-validator');
 
 const adminValidator = {
+    checkPagination: [
+        query('page')
+            .optional()
+            .isInt({ min: 1 }).withMessage('Page harus berupa angka minimal 1'),
+        query('limit')
+            .optional()
+            .isInt({ min: 1, max: 100 }).withMessage('Limit harus berupa angka antara 1 - 100')
+    ],
+    
     updateAccountStatus: [
         param('id_user')
             .notEmpty().withMessage('User ID is required in URL parameter')

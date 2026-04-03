@@ -55,4 +55,10 @@ router.patch(
     adminController.updateReviewStatus
 );
 
+router.get('/reviews', 
+    adminValidator.checkPagination, 
+    validate, 
+    adminController.getDashboardReviews
+);
+
 module.exports = router;

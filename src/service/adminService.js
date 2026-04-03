@@ -152,6 +152,20 @@ const adminService = {
 
         await adminRepository.updateReviewStatus(review, status_review);
         return review;
+    },
+
+    async getDailyReports(page, limit) {
+        const offset = (page - 1) * limit;
+        const { count, rows } = await adminRepository.findDashboardReviews(limit, offset);
+            
+        return {
+            data: rows,
+            meta: this._formatPagination(
+                count, 
+                page, 
+                limit
+            )
+        };
     }
 };
 

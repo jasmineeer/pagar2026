@@ -170,6 +170,34 @@ const adminRepository = {
         return await reviewInstance.update({ 
             status_review 
         });
+    },
+
+    
+    async findDashboardReviews(limit, offset) {
+        return await Review.findAndCountAll({
+            order: [['createdAt', 'DESC']],
+            limit,
+            offset,
+            include: [
+                {
+                    model: School,
+                    as: 'school',
+                    attributes: ['school_name']
+                },
+                {
+                    model: Attachment,
+                    as: 'attachments',
+                    where: { entity_type: 'REVIEW' },
+                    required: false,
+                    attributes: ['file_url']
+                },
+                {
+                    model: User,
+                    as: "user",
+                    attributes: ['username', 'role']
+                }
+            ],
+        });
     }
 };
 
