@@ -2,6 +2,7 @@ const adminRepository = require('../repositories/adminRepository');
 const HttpError = require('../utils/HttpError');
 const bcrypt = require('bcrypt');
 const { sendApprovalEmail } = require('../utils/email');
+const { getDashboardReviews } = require('../controllers/adminController');
 
 const adminService = {
     _formatPagination(result, page, limit) {
@@ -154,7 +155,7 @@ const adminService = {
         return review;
     },
 
-    async getDailyReports(page, limit) {
+    async getDashboardReviews(page, limit) {
         const offset = (page - 1) * limit;
         const { count, rows } = await adminRepository.findDashboardReviews(limit, offset);
             
