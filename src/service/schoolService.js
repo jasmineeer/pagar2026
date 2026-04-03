@@ -103,7 +103,6 @@ class SchoolService {
 
             if (userRole === 'SCHOOL') {
                 authorName = userName;
-                displayAuthor = `${schoolName}`;
                 displayAuthor = `${locationDisplay}`;
             } else {
                 authorName = 'Anonim';
