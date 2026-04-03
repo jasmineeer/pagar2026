@@ -1,5 +1,5 @@
 const { School, DailyReport, Sppg, Review, Attachment, User } = require('../models');
-const { Op } = Sequelize;
+const { Op } = require('sequelize');
 
 class PublicRepository {
     async getProfile(id_user) {
